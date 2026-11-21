@@ -1,0 +1,424 @@
+/* --- RESET & VARIABLES --- */
+:root {
+    --bg-color: #ffffff;
+    --text-main: #0a0a0a;
+    --text-muted: #666666;
+    --accent: #000000;
+    --border-light: #eaeaea;
+    --font-stack: 'Inter', sans-serif;
+    --lens-size: 120px; 
+    --zoom-factor: 2.5; 
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--font-stack);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    overflow-x: hidden;
+    cursor: none; /* Hide default cursor */
+}
+
+/* --- NOISE TEXTURE OVERLAY --- */
+.noise-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* --- ZOOM LENS (BACKGROUND SHIFT TECHNIQUE) --- */
+.lens-container {
+    position: fixed;
+    top: 0; left: 0;
+    width: var(--lens-size);
+    height: var(--lens-size);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10000;
+    transform: translate(-50%, -50%);
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    transition: width 0.3s, height 0.3s;
+    will-change: transform;
+}
+
+.lens-view {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    /* CRITICAL: Use the body's background image or screenshot source here.
+       For local testing without screenshots, we can use a gradient or hide it if no bg.
+       Ideally, you'd generate a snapshot, but for dynamic sites, this trick works best 
+       if the site has a consistent background pattern or color. 
+       
+       Since we have complex content, we'll rely on JS to update background-position 
+       based on mouse coords relative to document scroll.
+    */
+    background-repeat: no-repeat;
+    background-size: cover; /* Or specific px values calculated in JS */
+    pointer-events: none;
+}
+
+.lens-ring {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+/* State when hovering interactive elements */
+.lens-container.active {
+    width: calc(var(--lens-size) * 1.2);
+    height: calc(var(--lens-size) * 1.2);
+    box-shadow: 0 0 30px rgba(0,0,0,0.15);
+}
+
+/* --- TYPOGRAPHY --- */
+h1, h2, h3 {
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+.hero-section h1 {
+    font-size: clamp(3rem, 8vw, 6rem);
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.subtext {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    line-height: 1.6;
+    position: relative;
+    z-index: 2;
+}
+
+.small-label {
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    display: block;
+}
+
+/* --- NAVIGATION --- */
+.navbar {
+    position: fixed;
+    top: 0; width: 100%;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: -0.05em;
+}
+.dot { color: var(--accent); }
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-main);
+    margin-left: 2rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s;
+}
+.nav-links a:hover { opacity: 0.6; }
+
+.cta-btn-small {
+    padding: 8px 16px;
+    border: 1px solid var(--text-main);
+    background: transparent;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.cta-btn-small:hover {
+    background: var(--text-main);
+    color: white;
+}
+
+/* --- HERO SECTION WITH GIANT S --- */
+.hero-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5%;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-bg-image {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2000&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.1; 
+    z-index: 0;
+    filter: grayscale(100%) contrast(120%);
+}
+
+.giant-s-logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40vw;
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.03);
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+    line-height: 0.8;
+    font-family: serif;
+}
+
+.hero-content {
+    z-index: 2;
+    text-align: center;
+    max-width: 800px;
+}
+
+.hero-actions {
+    margin-top: 3rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+.primary-link {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--text-main);
+    border-bottom: 2px solid var(--text-main);
+    padding-bottom: 2px;
+}
+.secondary-link {
+    text-decoration: none;
+    color: var(--text-muted);
+}
+.divider { color: var(--border-light); }
+
+/* --- PHILOSOPHY SECTION --- */
+.philosophy-section {
+    padding: 10rem 5%;
+    background: #fafafa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    margin-bottom: 2rem;
+}
+
+.philosophy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.philosophy-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+
+.philosophy-image-container {
+    position: relative;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 4px;
+}
+
+.parallax-img {
+    width: 100%;
+    height: 120%;
+    object-fit: cover;
+    position: absolute;
+    top: -10%;
+}
+
+/* --- EXPERIENCE SECTION --- */
+.experience-section {
+    padding: 8rem 5%;
+    background: #fff;
+}
+
+.story-block {
+    position: relative;
+    min-height: 60vh;
+    margin-bottom: 4rem;
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    padding: 3rem;
+}
+
+.story-bg {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: 0;
+    transition: transform 0.5s ease-out;
+}
+
+.story-block:hover .story-bg {
+    transform: scale(1.05);
+}
+
+.overlay-gradient {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    z-index: 1;
+}
+
+.story-content {
+    position: relative;
+    z-index: 2;
+    color: white;
+    max-width: 600px;
+}
+
+.story-content h3 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.story-content p {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+.split-story-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 4rem;
+    align-items: stretch;
+}
+
+.story-half {
+    padding: 3rem;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.light-theme {
+    background: #f5f5f5;
+    color: #0a0a0a;
+}
+
+.image-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.story-icon-line {
+    width: 40px;
+    height: 2px;
+    background: #000;
+    margin-bottom: 1.5rem;
+}
+
+.overlay-light .story-content.centered {
+    text-align: center;
+    width: 100%;
+    max-width: none;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+/* --- CTA SECTION --- */
+.cta-section {
+    padding: 10rem 5%;
+    text-align: center;
+    background: #0a0a0a;
+    color: white;
+}
+
+.huge-heading {
+    font-size: clamp(3rem, 8vw, 5rem);
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.cta-desc {
+    color: #aaa;
+    margin-bottom: 3rem;
+    font-size: 1.2rem;
+}
+
+.platform-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.store-btn {
+    padding: 15px 30px;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.store-btn:hover { transform: scale(1.05); }
+
+/* --- FOOTER --- */
+.footer {
+    padding: 2rem 5%;
+    background: #0a0a0a;
+    color: #666;
+    font-size: 0.9rem;
+    border-top: 1px solid #222;
+}
+.footer-flex { display: flex; justify-content: space-between; }
+
+/* --- RESPONSIVE --- */
+@media (max-width: 1024px) {
+    .split-story-row { grid-template-columns: 1fr; }
+    .philosophy-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    .hero-section { padding-top: 100px;}
+    .nav-links { display: none; }
+    .giant-s-logo { font-size: 60vw; opacity: 0.05; }
+}

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MESSENGER — Clarity</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ZOOM LENS CONTAINER -->
+    <!-- We use a div that acts as a window showing the page background shifted -->
+    <div class="lens-container">
+        <div class="lens-view"></div>
+        <div class="lens-ring"></div>
+    </div>
+
+    <!-- Noise Texture -->
+    <div class="noise-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo">MESSENGER<span>.</span></div>
+        <div class="nav-links">
+            <a href="#philosophy">Philosophy</a>
+            <a href="#experience">Experience</a>
+            <a href="#download">Download</a>
+        </div>
+        <button class="cta-btn-small">Early Access</button>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-bg-image"></div>
+        <div class="giant-s-logo">S</div>
+        
+        <div class="hero-content">
+            <h1>Silence the noise.<br>Hear only what matters.</h1>
+            <p>A minimalist messenger built for clarity, speed, and privacy. No ads. No clutter. Just conversation.</p>
+            
+            <div class="hero-actions">
+                <a href="#download" class="primary-link">Start chatting →</a>
+                <span class="divider">|</span>
+                <a href="#philosophy" class="secondary-link">Read manifesto</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section id="philosophy" class="philosophy-section">
+        <div class="container">
+            <div class="philosophy-grid">
+                <div class="philosophy-text">
+                    <h2 class="section-title">We rebuilt communication<br>from scratch.</h2>
+                    <p>Ten years of messaging apps taught us one thing: complexity kills intimacy. Modern messengers are bloated with stories, games, and payments.</p>
+                    <p>We stripped it all away. What remains is pure signal. Lightweight architecture running on your own hardware or ours. Secure by design.</p>
+                </div>
+                <div class="philosophy-image-container">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000&auto=format&fit=crop" alt="Architecture" class="parallax-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section (Immersive Storytelling) -->
+    <section id="experience" class="experience-section">
+        <div class="container">
+            <h2 class="small-label">THE EXPERIENCE</h2>
+            
+            <!-- Block 1: Speed -->
+            <article class="story-block large-dark">
+                <div class="story-bg" style="background-image: url('https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1600&auto=format&fit=crop');"></div>
+                <div class="overlay-gradient"></div>
+                <div class="story-content">
+                    <h3>Instant Delivery</h3>
+                    <p>WebSocket technology ensures messages arrive before you finish blinking. Latency measured in milliseconds, not seconds.</p>
+                </div>
+            </article>
+
+            <!-- Block 2: Privacy & Design Split -->
+            <div class="split-story-row">
+                <div class="story-half light-theme">
+                    <div class="story-icon-line"></div>
+                    <h3>Total Privacy</h3>
+                    <p>Your data lives on your server. End-to-end encryption standard. We don't sell your conversations.</p>
+                </div>
+                <div class="story-half image-side">
+                     <img src="https://images.unsplash.com/photo-1519389950473-a4c269c88aee?q=80&w=800&auto=format&fit=crop" alt="Security" class="rounded-img">
+                </div>
+            </div>
+
+             <!-- Block 3: Aesthetics -->
+             <article class="story-block overlay-light">
+                <div class="story-bg" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600&auto=format&fit=crop');"></div>
+                <div class="overlay-gradient"></div>
+                <div class="story-content centered">
+                    <h3>Pure Aesthetics</h3>
+                    <p>Whitespace as a feature. Calm colors. Sharp typography.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <!-- Download / CTA Section -->
+    <section id="download" class="cta-section">
+        <div class="container center-align">
+            <h2 class="huge-heading">Ready to switch?</h2>
+            <p class="cta-desc">Available soon for Android & iOS. Web version live now.</p>
+            
+            <div class="platform-buttons">
+                <button class="store-btn">iOS App Store</button>
+                <button class="store-btn">Android APK</button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container footer-flex">
+            <div class="copyright">© 2026 Messenger Project</div>
+            <div class="links">Privacy · Terms · Contact</div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
